@@ -1,12 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello World</title>
-  </head>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Directorio de Profesionales</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+        .container {
+            max-width: 960px;
+            margin: 2em auto;
+            background-color: #fff;
+            padding: 2em;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        h1 {
+            color: #005a9c; 
+            text-align: center;
+            margin-bottom: 1em;
+        }
+        form {
+            margin-bottom: 2em;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        form select,
+        form input[type="text"] {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        form input[type="text"] {
+            flex-grow: 1;
+        }
+        form button {
+            padding: 12px 24px;
+            border: none;
+            background: linear-gradient(to right, #007bff, #0056b3);
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        form button:hover {
+            background: linear-gradient(to right, #0069d9, #004ca3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+            text-align: left;
+        }
+        th {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #e2e6ea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Directorio de Profesionales</h1>
 
-  <body>
-    <h1>Hello World</h1>
-  </body>
+        <form method="get" action="/">
+            <select name="search_field">
+                <option value="all" {% if search_field == 'all' %}selected{% endif %}>Todos los Campos</option>
+                <option value="nombre" {% if search_field == 'nombre' %}selected{% endif %}>Nombre</option>
+                <option value="compania" {% if search_field == 'compania' %}selected{% endif %}>Compañía</option>
+                <option value="cargo" {% if search_field == 'cargo' %}selected{% endif %}>Cargo</option>
+                <option value="ingreso_anual" {% if search_field == 'ingreso_anual' %}selected{% endif %}>Ingreso Anual</option>
+                <option value="experiencia_anios" {% if search_field == 'experiencia_anios' %}selected{% endif %}>Años de Experiencia</option>
+            </select>
+            <input type="text" name="search_term" placeholder="Escribe aquí para buscar..." value="{{ search_term or '' }}">
+            <button type="submit">Filtrar</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Compañía</th>
+                    <th>Cargo</th>
+                    <th>Ingreso Anual</th>
+                    <th>Años de Experiencia</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for professional in professionals %}
+                <tr>
+                    <td>{{ professional.nombre }}</td>
+                    <td>{{ professional.compania }}</td>
+                    <td>{{ professional.cargo }}</td>
+                    <td>${{ "{:,.2f}".format(professional.ingreso_anual) }}</td>
+                    <td>{{ professional.experiencia_anios }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 2em;">{% if search_term %}No se encontraron profesionales que coincidan con tu búsqueda.{% else %}No hay profesionales para mostrar.{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
 </html>
